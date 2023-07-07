@@ -2,7 +2,7 @@
 
 __author__ = "SCA TAC First Responders"
 __copyright__ = "Copyright 2023, Cisco Systems Inc."
-__version__ = "1.1"
+__version__ = "1.2"
 __status__ = "Production"
 
 import logging
@@ -18,18 +18,18 @@ from subprocess import STDOUT, CalledProcessError, TimeoutExpired, check_output,
 import netifaces
 
 parser = ArgumentParser()
-subparsers = parser.add_subparsers(dest="command")
-
-parser_upload = subparsers.add_parser("upload")
+subparsers = parser.add_subparsers(dest='command', required=True)
+parser_upload = subparsers.add_parser('upload')
 parser_upload.add_argument("-c", "--case", help="The case number to attach the files to", required=True)
 parser_upload.add_argument("-t", "--token", help="The token to upload files to cxd.cisco.com", required=True)
-
+parser_no_upload = subparsers.add_parser('no-upload')
 args = parser.parse_args()
-
-if args.command == "upload":
+if args.command == 'upload':
     case = str(args.case)
     token = str(args.token)
 
+if args.command == 'no-upload':
+    pass
 
 def root_check():
     return os.geteuid() == 0
