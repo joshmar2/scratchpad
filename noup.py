@@ -11,25 +11,26 @@ import subprocess
 import tempfile
 from argparse import ArgumentParser
 from datetime import datetime, timezone
-from os import mkdir, path, remove
-from shutil import copy, copytree, ignore_patterns, rmtree
+from os import mkdir, path
+from shutil import copy, copytree, ignore_patterns
 from subprocess import STDOUT, CalledProcessError, TimeoutExpired, check_output, run
 
 import netifaces
 
 parser = ArgumentParser()
-subparsers = parser.add_subparsers(dest='command', required=True)
-parser_upload = subparsers.add_parser('upload')
+subparsers = parser.add_subparsers(dest="command", required=True)
+parser_upload = subparsers.add_parser("upload")
 parser_upload.add_argument("-c", "--case", help="The case number to attach the files to", required=True)
 parser_upload.add_argument("-t", "--token", help="The token to upload files to cxd.cisco.com", required=True)
-parser_no_upload = subparsers.add_parser('no-upload')
+parser_no_upload = subparsers.add_parser("no-upload")
 args = parser.parse_args()
-if args.command == 'upload':
+if args.command == "upload":
     case = str(args.case)
     token = str(args.token)
 
-if args.command == 'no-upload':
+if args.command == "no-upload":
     pass
+
 
 def root_check():
     return os.geteuid() == 0
@@ -39,7 +40,9 @@ def create_bundle_dir():
     temp_dir = tempfile.mkdtemp()
     return temp_dir
 
+
 bundledir = create_bundle_dir()
+
 
 def set_stage():
     for subdir in "ona_meta_data", "os_info", "network", "connectivity", "process_info", "disk_stats":
@@ -140,7 +143,7 @@ def ona_settings_and_logs():
     )
     copytree("/var/log", f"{bundledir}/var/log/", ignore=ignore_patterns("*.dat", "journal"), copy_function=copy)
     cmd = f"/opt/silk/bin/rwcut --timestamp-format iso --fields sIp,dIp,sPort,dPort,protocol,Bytes,Packets,sTime,eTime /opt/obsrvbl-ona/logs/ipfix/.202* >> {bundledir}/ona_settings/logs/ipfix/clear_silk 2>/dev/null"
-    run(cmd,shell=True)
+    run(cmd, shell=True)
 
 
 def process_info():
