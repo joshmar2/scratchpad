@@ -2,7 +2,7 @@
 
 __author__ = "SCA TAC First Responders"
 __copyright__ = "Copyright 2023, Cisco Systems Inc."
-__version__ = "1.2"
+__version__ = "1.1"
 __status__ = "Production"
 
 import logging
