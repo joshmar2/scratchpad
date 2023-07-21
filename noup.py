@@ -193,8 +193,8 @@ def disk_stats():
     cmd_to_file("/disk_stats/lsof", "timeout 60 lsof")
 
 
-def pcap_30_second():
-    cmd = f"timeout 30 tcpdump -i any not host localhost and not host 127.0.0.1 and udp -c10000 -w {bundledir}/capture.pcap >/dev/null 2>&1"
+def pcap_5_second():
+    cmd = f"timeout 5 tcpdump -i any not host localhost and not host 127.0.0.1 and udp -c10000 -w {bundledir}/capture.pcap >/dev/null 2>&1"
     run(cmd, shell=True)
 
 
