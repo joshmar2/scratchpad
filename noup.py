@@ -81,7 +81,7 @@ def upload_file(case, token, f_name):
             print_log("[FAILURE] (requests) Failed to upload `%s` to %s. Please check the first-responder.log file for the full error" % f_name, screen=True, log=True, color="red", level="warn")
             exit()
     else:
-        command = ["curl","-k","--progress-bar",f"https://{case}:{token}@cxd.cisco.com/home/","--upload-file",% f_name]
+        command = ["curl","-k","--progress-bar",f"https://{case}:{token}@cxd.cisco.com/home/","--upload-file"]
         try:
             output = subprocess.check_output(command)
             if output:
