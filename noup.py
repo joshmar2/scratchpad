@@ -209,7 +209,7 @@ def main():
         ona_settings_and_logs,
         process_info,
         disk_stats,
-        pcap_30_second,
+        pcap_5_second,
     ]
     print("\r\n*** Creating Support Bundle")
     for i, func in enumerate(functions, start=1):
