@@ -70,25 +70,25 @@ def upload_file(case, token, f_name):
     if rqst_avail:
         try:
             with open(f_name, "rb") as data:
-                response = requests.put("https://cxd.cisco.com/home/%s" % f_name, data=data, auth=requests.auth.HTTPBasicAuth(case, token), headers={"accept": "application/json"})
+                response = requests.put(f"https://cxd.cisco.com/home/{f_name}", data=data, auth=requests.auth.HTTPBasicAuth(case, token), headers={"accept": "application/json"})
                 response.raise_for_status()
-                print_log("(requests) `%s` successfully uploaded to %s" % (f_name, case), screen=True, log=True, color="green", level="info")
+                print_log(f"(requests) `{f_name}` successfully uploaded to {case}", screen=True, log=True, color="green", level="info")
         except requests.HTTPError as rqst_err:
-            print_log("[FAILURE] (requests) Failed to upload `%s` to %s. Please check the first-responder.log file for the full error" % (f_name, case), screen=True, color="red" )
-            print_log("(requests) Upload Failed with the following HTTP error:\n----------\n%s\n----------" % rqst_err, log=True, level="warning" )
+            print_log(f"[FAILURE] (requests) Failed to upload Failed to upload `{f_name}` to {case}. Please check the first-responder.log file for the full error", screen=True, color="red" )
+            print_log(f"(requests) Upload Failed with the following HTTP error:\n----------\n{rqst_err}\n----------", log=True, level="warning" )
             exit()
         except FileNotFoundError as file_err:
-            print_log("[FAILURE] (requests) Failed to upload `%s` to %s. Please check the first-responder.log file for the full error" % f_name, screen=True, log=True, color="red", level="warning")
+            print_log(f"[FAILURE] (requests) Failed to upload `{f_name}` to {case}. Please check the first-responder.log file for the full error", screen=True, log=True, color="red", level="warning")
             exit()
     else:
         command = ["curl","-k","--progress-bar",f"https://{case}:{token}@cxd.cisco.com/home/","--upload-file"]
         try:
             output = subprocess.check_output(command)
             if output:
-                print_log("[FAILURE] (cURL) Failed to upload `%s` to %s. Please check the first-responder.log file for the full error" % (f_name, case), screen=True, color="red")
-                print_log("(cURL) Upload Failed with the following curl error:\n----------\n%s\n----------" % output, log=True, level="warning", )
+                print_log(f"[FAILURE] (cURL) Failed to upload `{f_name}` to {case}. Please check the first-responder.log file for the full error", screen=True, color="red")
+                print_log(f"(cURL) Upload Failed with the following curl error:\n----------\n{output}\n----------", log=True, level="warning")
                 exit()
-            print_log("(cURL) `%s` successfully uploaded to %s" % (f_name, case), screen=True, log=True, color="green", level="info")
+            print_log(f"(cURL) `{f_name}` successfully uploaded to {case}", screen=True, log=True, color="green", level="info")
         except subprocess.CalledProcessError as e:
             print_log(f"[FAILURE] Failed to upload `{f_name}` to {case}.", screen=True, color="red")
             print_log(f"Upload failed with the following subprocess error:\n----------\n{e}\n----------", log=True, level="warning")
