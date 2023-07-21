@@ -75,10 +75,10 @@ def upload_file(case, token, f_name):
                 print_log("(requests) `%s` successfully uploaded to %s" % (f_name, case), screen=True, log=True, color="green", level="info")
         except requests.HTTPError as rqst_err:
             print_log("[FAILURE] (requests) Failed to upload `%s` to %s. Please check the first-responder.log file for the full error" % (f_name, case), screen=True, color="red" )
-            print_log("(requests) Upload Failed with the following error:\n----------\n%s\n----------" % rqst_err, log=True, level="warn" )
+            print_log("(requests) Upload Failed with the following error:\n----------\n%s\n----------" % rqst_err, log=True, level="warning" )
             exit()
         except FileNotFoundError as file_err:
-            print_log("[FAILURE] (requests) Failed to upload `%s` to %s. Please check the first-responder.log file for the full error" % f_name, screen=True, log=True, color="red", level="warn")
+            print_log("[FAILURE] (requests) Failed to upload `%s` to %s. Please check the first-responder.log file for the full error" % f_name, screen=True, log=True, color="red", level="warning")
             exit()
     else:
         command = ["curl","-k","--progress-bar",f"https://{case}:{token}@cxd.cisco.com/home/","--upload-file"]
@@ -86,13 +86,13 @@ def upload_file(case, token, f_name):
             output = subprocess.check_output(command)
             if output:
                 print_log("[FAILURE] (cURL) Failed to upload `%s` to %s. Please check the first-responder.log file for the full error" % (f_name, case), screen=True, color="red")
-                print_log("(cURL) Upload Failed with the following error:\n----------\n%s\n----------" % output, log=True, level="warn", )
+                print_log("(cURL) Upload Failed with the following error:\n----------\n%s\n----------" % output, log=True, level="warning", )
                 exit()
             print_log("(cURL) `%s` successfully uploaded to %s" % (f_name, case), screen=True, log=True, color="green", level="info")
         except subprocess.CalledProcessError as e:
             print_log(f"[FAILURE] Failed to upload `{f_name}` to {case}.", screen=True, color="red")
-            print_log(f"Upload failed with the following error:\n----------\n{e}\n----------", log=True, level="warn")
-            print_log("Notify Cisco TAC of Failure to upload for further assistance", log=True, level="warn")
+            print_log(f"Upload failed with the following error:\n----------\n{e}\n----------", log=True, level="warning")
+            print_log("Notify Cisco TAC of Failure to upload for further assistance", log=True, level="warning")
             exit()
 
 
