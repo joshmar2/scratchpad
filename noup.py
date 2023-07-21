@@ -74,18 +74,18 @@ def upload_file(case, token, f_name):
                 response.raise_for_status()
                 print_log(f"(requests) `{f_name}` successfully uploaded to {case}", screen=True, log=True, color="green", level="info")
         except requests.HTTPError as rqst_err:
-            print_log(f"[FAILURE] (requests) Failed to upload Failed to upload `{f_name}` to {case}. Please check the first-responder.log file for the full error", screen=True, color="red" )
+            print_log(f"[FAILURE] (requests) Failed to upload Failed to upload `{f_name}` to {case}.", screen=True, color="red" )
             print_log(f"(requests) Upload Failed with the following HTTP error:\n----------\n{rqst_err}\n----------", log=True, level="warning" )
             exit()
         except FileNotFoundError as file_err:
-            print_log(f"[FAILURE] (requests) Failed to upload `{f_name}` to {case}. Please check the first-responder.log file for the full error", screen=True, log=True, color="red", level="warning")
+            print_log(f"[FAILURE] (requests) Failed to upload `{f_name}` to {case}. ", screen=True, log=True, color="red", level="warning")
             exit()
     else:
         command = ["curl","-k","--progress-bar",f"https://{case}:{token}@cxd.cisco.com/home/","--upload-file"]
         try:
             output = subprocess.check_output(command)
             if output:
-                print_log(f"[FAILURE] (cURL) Failed to upload `{f_name}` to {case}. Please check the first-responder.log file for the full error", screen=True, color="red")
+                print_log(f"[FAILURE] (cURL) Failed to upload `{f_name}` to {case}. ", screen=True, color="red")
                 print_log(f"(cURL) Upload Failed with the following curl error:\n----------\n{output}\n----------", log=True, level="warning")
                 exit()
             print_log(f"(cURL) `{f_name}` successfully uploaded to {case}", screen=True, log=True, color="green", level="info")
