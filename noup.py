@@ -182,7 +182,7 @@ def main():
     print("\nCompressing files. This may take some time.")
     run(cmd, shell=True)
     if args.command == "upload": 
-        unique_bundle_name = f"{bundle_name.replace('.tar.xz', '_fr.tar.xz')}"
+        unique_bundle_name = bundle_name.replace('.tar.xz', '_fr.tar.xz')
         print("\nUploading file to TAC Case. This may take some time.") 
         upload_file(case, token, unique_bundle_name)
     else:
