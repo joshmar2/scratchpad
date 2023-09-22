@@ -187,3 +187,8 @@ def main():
         upload_file(case, token, unique_bundle_name)
     else:
         pass
+
+if root_check():
+    main()
+else:
+    print("You are not root, re-run this script as root. Exiting.")
