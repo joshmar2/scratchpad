@@ -172,9 +172,6 @@ def pcap_3_second():
     cmd = f"timeout 3 tcpdump -i any not host localhost and not host 127.0.0.1 and udp -c10000 -w {bundledir}/capture.pcap >/dev/null 2>&1"
     run(cmd, shell=True)
 
-def make_bundle():
-
-
 def main():
     functions = [set_stage, ona_meta_data, get_ip, os_info, network, connectivity, ona_settings_and_logs, process_info, disk_stats, pcap_3_second]
     print("\r\n*** Creating Support Bundle")
