@@ -2,7 +2,7 @@
 
 __author__ = "SCA TAC First Responders"
 __copyright__ = "Copyright 2023, Cisco Systems Inc."
-__version__ = "1.2"
+__version__ = "1.3"
 __status__ = "Production"
 
 import netifaces
@@ -191,6 +191,7 @@ def main():
         print("\nUploading file to TAC Case. This may take some time.")
         upload_file(case, token, bundle_name)
     else:
+        pass
 
 if root_check():
     main()
