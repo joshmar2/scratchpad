@@ -95,7 +95,8 @@ def cmd_to_file(filename, command):
 
 def get_ip():
     for interface in netifaces.interfaces():
-        if interface.startswith('lo'): continue
+        if interface.startswith('lo'):
+            continue
         addresses = netifaces.ifaddresses(interface).get(netifaces.AF_INET)
         if addresses:
             ip_address = addresses[0]['addr']
@@ -171,20 +172,25 @@ def pcap_3_second():
     cmd = f"timeout 3 tcpdump -i any not host localhost and not host 127.0.0.1 and udp -c10000 -w {bundledir}/capture.pcap >/dev/null 2>&1"
     run(cmd, shell=True)
 
+def make_bundle():
+    if args.command == "upload":
+        bundle_name = f"scabundle-ona-{open('/sys/class/dmi/id/product_serial').read().strip().replace(' ','')}.{datetime.now(timezone.utc).strftime('%Y%m%d.%H%M')}_xdrafr.tar.xz"
+    else:
+        bundle_name = f"scabundle-ona-{open('/sys/class/dmi/id/product_serial').read().strip().replace(' ','')}.{datetime.now(timezone.utc).strftime('%Y%m%d.%H%M')}.tar.xz"
+    cmd = f"tar -Jcf {bundle_name} -C {bundledir} . ../capture.pcap --remove-files 2>/dev/null"
+    print("\nCompressing files. This may take some time.")
+    run(cmd, shell=True)
+
 def main():
     functions = [set_stage, ona_meta_data, get_ip, os_info, network, connectivity, ona_settings_and_logs, process_info, disk_stats, pcap_3_second]
     print("\r\n*** Creating Support Bundle")
     for i, func in enumerate(functions, start=1):
         print(f"Processing {i}/{len(functions)}: {func.__name__:<22}", end="\r")
         func()
-    bundle_name = f"scabundle-ona-{open('/sys/class/dmi/id/product_serial').read().strip().replace(' ','')}.{datetime.now(timezone.utc).strftime('%Y%m%d.%H%M')}.tar.xz"
-    cmd = f"tar -Jcf {bundle_name} -C {bundledir} . ../capture.pcap --remove-files 2>/dev/null"
-    print("\nCompressing files. This may take some time.")
-    run(cmd, shell=True)
-    if args.command == "upload": 
-        unique_bundle_name = bundle_name.replace('.tar.xz', '_fr.tar.xz')
-        print("\nUploading file to TAC Case. This may take some time.") 
-        upload_file(case, token, unique_bundle_name)
+    make_bundle()
+    if args.command == "upload":
+        print("\nUploading file to TAC Case. This may take some time.")
+        upload_file(case, token, bundle_name)
     else:
         pass
 
