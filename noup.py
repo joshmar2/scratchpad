@@ -173,13 +173,7 @@ def pcap_3_second():
     run(cmd, shell=True)
 
 def make_bundle():
-    if args.command == "upload":
-        bundle_name = f"scabundle-ona-{open('/sys/class/dmi/id/product_serial').read().strip().replace(' ','')}.{datetime.now(timezone.utc).strftime('%Y%m%d.%H%M')}_xdrafr.tar.xz"
-    else:
-        bundle_name = f"scabundle-ona-{open('/sys/class/dmi/id/product_serial').read().strip().replace(' ','')}.{datetime.now(timezone.utc).strftime('%Y%m%d.%H%M')}.tar.xz"
-    cmd = f"tar -Jcf {bundle_name} -C {bundledir} . ../capture.pcap --remove-files 2>/dev/null"
-    print("\nCompressing files. This may take some time.")
-    run(cmd, shell=True)
+
 
 def main():
     functions = [set_stage, ona_meta_data, get_ip, os_info, network, connectivity, ona_settings_and_logs, process_info, disk_stats, pcap_3_second]
@@ -187,12 +181,19 @@ def main():
     for i, func in enumerate(functions, start=1):
         print(f"Processing {i}/{len(functions)}: {func.__name__:<22}", end="\r")
         func()
-    make_bundle()
+    bundle_name = f"scabundle-ona-{open('/sys/class/dmi/id/product_serial').read().strip().replace(' ','')}.{datetime.now(timezone.utc).strftime('%Y%m%d.%H%M')}"
+    if args.command == "upload":
+        bundle_name += "_xdrafr.tar.xz"
+    else:
+        bundle_name += ".tar.xz"
+    cmd = f"tar -Jcf {bundle_name} -C {bundledir} . ../capture.pcap --remove-files 2>/dev/null"
+    print("\nCompressing files. This may take some time.")
+    run(cmd, shell=True)
+
     if args.command == "upload":
         print("\nUploading file to TAC Case. This may take some time.")
         upload_file(case, token, bundle_name)
     else:
-        pass
 
 if root_check():
     main()
