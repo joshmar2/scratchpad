@@ -66,7 +66,7 @@ def upload_file(case, token, f_name):
     if rqst_avail:
         try:
             with open(f_name, "rb") as data:
-                response = requests.put(f"https://cxd.cisco.com/home/{f_name}", data=data, auth=requests.auth.HTTPBasicAuth(case, token), headers={"accept": "application/json"})
+                response = requests.put(f"https://cxd.cisco.com/home/{f_name}", data=data, auth=requests.auth.HTTPBasicAuth(case, token), headers={"accept": "*/*"})
                 response.raise_for_status()
                 print_log(f"`{f_name}` successfully uploaded to {case}", screen=True, log=True, color="green", level="info")
         except requests.HTTPError as rqst_err:
